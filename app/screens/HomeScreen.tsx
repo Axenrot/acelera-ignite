@@ -12,17 +12,16 @@ import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 const welcomeLogo = require("../../assets/images/logo.png")
 const welcomeFace = require("../../assets/images/welcome-face.png")
 
-interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
+interface HomeScreenProps extends AppStackScreenProps<"HomeScreen"> {}
 
-export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(_props) {
+export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_props) {
   const { navigation } = _props
   const {
     authenticationStore: { logout },
   } = useStores()
 
   function goNext() {
-    // navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
-    navigation.navigate("HomeScreen", { title: "Home Page" })
+    navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
   }
 
   useHeader(
@@ -38,6 +37,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   return (
     <View style={$container}>
       <View style={$topContainer}>
+        <Text>HOME SCREEN HERE</Text>
         <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" />
         <Text
           testID="welcome-heading"
