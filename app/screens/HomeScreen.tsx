@@ -14,7 +14,7 @@ const logo = require("../../assets/images/logo.png")
 export interface HomeScreenProps extends AppStackScreenProps<"HomeScreen"> {
   name: string
   description: string
-  data: ReactElement[]
+  // data: ReactElement[]
 }
 
 export function HomeScreen(_props: HomeScreenProps): ReactElement {

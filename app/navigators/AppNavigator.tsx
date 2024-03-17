@@ -67,7 +67,12 @@ const AppStack = observer(function AppStack() {
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
       initialRouteName={isAuthenticated ? "Welcome" : "Login"}
     >
-      <Stack.Screen name="HomeScreen" component={Screens.HomeScreen} />
+      <Stack.Screen
+        name="HomeScreen"
+        component={(props: any) => (
+          <Screens.HomeScreen {...props} name="Your Name" description="STRING TESTE" />
+        )}
+      />
       {isAuthenticated ? (
         <>
           <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
