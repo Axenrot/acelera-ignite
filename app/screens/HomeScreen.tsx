@@ -1,106 +1,113 @@
-import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Text } from "app/components"
+// import { Link, RouteProp, useRoute } from "@react-navigation/native"
+import React, { ReactElement, useEffect, useRef, useState } from "react"
+import { Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Drawer } from "react-native-drawer-layout"
+import { Screen, Text } from "../components"
 import { isRTL } from "../i18n"
-import { useStores } from "../models"
-import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-import { useHeader } from "../utils/useHeader"
 import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
+import { DrawerIconButton } from "../components/DrawerIconButton"
+import { AppStackScreenProps } from "app/navigators"
 
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
+const logo = require("../../assets/images/logo.png")
 
-interface HomeScreenProps extends AppStackScreenProps<"HomeScreen"> {}
+export interface HomeScreenProps extends AppStackScreenProps<"HomeScreen"> {
+  name: string
+  description: string
+  data: ReactElement[]
+}
 
-export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_props) {
-  const { navigation } = _props
-  const {
-    authenticationStore: { logout },
-  } = useStores()
+export function HomeScreen(_props: HomeScreenProps): ReactElement {
+  const [open, setOpen] = useState(false)
+  const timeout = useRef<ReturnType<typeof setTimeout>>()
+  // const listRef = useRef<SectionList>(null)
+  // const menuRef = useRef<ListViewRef<DemoListItem["item"]>>(null)
+  // const route = useRoute<RouteProp<DemoTabParamList, "DemoShowroom">>()
+  // const params = route.params
 
-  function goNext() {
-    navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
-  }
+  // // handle Web links
+  // React.useEffect(() => {
+  //   if (params !== undefined && Object.keys(params).length > 0) {
+  //     const demoValues = Object.values(Demos)
+  //     const findSectionIndex = demoValues.findIndex(
+  //       (x) => x.name.toLowerCase() === params.queryIndex,
+  //     )
+  //     let findItemIndex = 0
+  //     if (params.itemIndex) {
+  //       try {
+  //         findItemIndex =
+  //           demoValues[findSectionIndex].data.findIndex(
+  //             (u) => slugify(u.props.name) === params.itemIndex,
+  //           ) + 1
+  //       } catch (err) {
+  //         console.error(err)
+  //       }
+  //     }
+  //     handleScroll(findSectionIndex, findItemIndex)
+  //   }
+  // }, [params])
 
-  useHeader(
-    {
-      rightTx: "common.logOut",
-      onRightPress: logout,
-    },
-    [logout],
-  )
+  // const handleScroll = (sectionIndex: number, itemIndex = 0) => {
+  //   listRef.current?.scrollToLocation({
+  //     animated: true,
+  //     itemIndex,
+  //     sectionIndex,
+  //   })
+  //   toggleDrawer()
+  // }
 
-  const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
+  useEffect(() => {
+    return () => timeout.current && clearTimeout(timeout.current)
+  }, [])
+
+  const $drawerInsets = useSafeAreaInsetsStyle(["top"])
 
   return (
-    <View style={$container}>
-      <View style={$topContainer}>
-        <Text>HOME SCREEN HERE</Text>
-        <Image style={$welcomeLogo} source={welcomeLogo} resizeMode="contain" />
-        <Text
-          testID="welcome-heading"
-          style={$welcomeHeading}
-          tx="welcomeScreen.readyForLaunch"
-          preset="heading"
-        />
-        <Text tx="welcomeScreen.exciting" preset="subheading" />
-        <Image style={$welcomeFace} source={welcomeFace} resizeMode="contain" />
-      </View>
+    <Drawer
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      drawerType={"slide"}
+      drawerPosition={isRTL ? "right" : "left"}
+      renderDrawerContent={() => (
+        <View style={[$drawer, $drawerInsets]}>
+          <View style={$logoContainer}>
+            <Image source={logo} style={$logoImage} />
+          </View>
+          <View>
+            <Text>CATEGORIES MENU HERE</Text>
+          </View>
+        </View>
+      )}
+    >
+      <Screen preset="fixed" safeAreaEdges={["top"]} contentContainerStyle={$screenContainer}>
+        <DrawerIconButton onPress={() => setOpen(!open)} />
 
-      <View style={[$bottomContainer, $bottomContainerInsets]}>
-        <Text tx="welcomeScreen.postscript" size="md" />
-
-        <Button
-          testID="next-screen-button"
-          preset="reversed"
-          tx="welcomeScreen.letsGo"
-          onPress={goNext}
-        />
-      </View>
-    </View>
+        <View>
+          <Text>MAIN CONTENT HERE HERE</Text>
+        </View>
+      </Screen>
+    </Drawer>
   )
-})
+}
 
-const $container: ViewStyle = {
+const $screenContainer: ViewStyle = {
   flex: 1,
+}
+
+const $drawer: ViewStyle = {
   backgroundColor: colors.background,
+  flex: 1,
 }
 
-const $topContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 1,
-  flexBasis: "57%",
+const $logoImage: ImageStyle = {
+  height: 42,
+  width: 77,
+}
+
+const $logoContainer: ViewStyle = {
+  alignSelf: "flex-start",
   justifyContent: "center",
+  height: 56,
   paddingHorizontal: spacing.lg,
-}
-
-const $bottomContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: "43%",
-  backgroundColor: colors.palette.neutral100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
-  paddingHorizontal: spacing.lg,
-  justifyContent: "space-around",
-}
-const $welcomeLogo: ImageStyle = {
-  height: 88,
-  width: "100%",
-  marginBottom: spacing.xxl,
-}
-
-const $welcomeFace: ImageStyle = {
-  height: 169,
-  width: 269,
-  position: "absolute",
-  bottom: -47,
-  right: -80,
-  transform: [{ scaleX: isRTL ? -1 : 1 }],
-}
-
-const $welcomeHeading: TextStyle = {
-  marginBottom: spacing.md,
 }

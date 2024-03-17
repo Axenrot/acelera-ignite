@@ -9,7 +9,7 @@ import { DemoTabParamList, DemoTabScreenProps } from "../../navigators/DemoNavig
 import { colors, spacing } from "../../theme"
 import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 import * as Demos from "./demos"
-import { DrawerIconButton } from "./DrawerIconButton"
+import { DrawerIconButton } from "../../components/DrawerIconButton"
 
 const logo = require("../../../assets/images/logo.png")
 
